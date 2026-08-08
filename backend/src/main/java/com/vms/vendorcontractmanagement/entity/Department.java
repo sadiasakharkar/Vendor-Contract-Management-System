@@ -1,0 +1,2 @@
+package com.vms.vendorcontractmanagement.entity; import jakarta.persistence.*; import lombok.*; import java.util.*;
+@Entity @Table(name="departments") @Getter @Setter @NoArgsConstructor public class Department { @Id @GeneratedValue(strategy=GenerationType.IDENTITY) @Column(name="department_id") Long id; String departmentName,managerName; @ManyToMany(mappedBy="departments") Set<Vendor> vendors=new HashSet<>(); }

@@ -1,0 +1,2 @@
+package com.vms.vendorcontractmanagement.entity; import jakarta.persistence.*; import lombok.*; import java.time.*;
+@Entity @Table(name="users") @Getter @Setter @NoArgsConstructor public class User { @Id @GeneratedValue(strategy=GenerationType.IDENTITY) @Column(name="user_id") Long id; String fullName; @Column(unique=true) String email; @Column(name="password_hash") String passwordHash; @ManyToOne(fetch=FetchType.EAGER) @JoinColumn(name="role_id") Role role; Boolean active=true; LocalDateTime createdAt; @PrePersist void created(){createdAt=LocalDateTime.now();} }

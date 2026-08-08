@@ -1,0 +1,1 @@
+package com.vms.vendorcontractmanagement.exception; import org.springframework.http.*; public class ApiException extends RuntimeException { public final HttpStatus status; public ApiException(HttpStatus s,String m){super(m);status=s;} }

@@ -1,0 +1,2 @@
+package com.vms.vendorcontractmanagement.entity; import jakarta.persistence.*; import lombok.*; import java.time.*;
+@Entity @Table(name="audit_logs") @Getter @Setter @NoArgsConstructor public class AuditLog { @Id @GeneratedValue(strategy=GenerationType.IDENTITY) @Column(name="audit_id") Long id; @ManyToOne @JoinColumn(name="user_id") User user; String action,entityName; Long entityId; @Column(columnDefinition="TEXT") String oldValue; @Column(columnDefinition="TEXT") String newValue; LocalDateTime createdAt; @PrePersist void created(){createdAt=LocalDateTime.now();} }

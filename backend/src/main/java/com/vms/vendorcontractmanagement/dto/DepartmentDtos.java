@@ -1,0 +1,1 @@
+package com.vms.vendorcontractmanagement.dto; import jakarta.validation.constraints.*; public final class DepartmentDtos {private DepartmentDtos(){} public record Request(@NotBlank String departmentName,String managerName){} public record Response(Long id,String departmentName,String managerName){} }

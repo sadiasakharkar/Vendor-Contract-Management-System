@@ -1,0 +1,1 @@
+package com.vms.vendorcontractmanagement.repository; import com.vms.vendorcontractmanagement.entity.*; import org.springframework.data.jpa.repository.*; public interface DepartmentRepository extends JpaRepository<Department,Long>{}
