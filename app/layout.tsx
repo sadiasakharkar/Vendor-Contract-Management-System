@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'VendorFlow — Vendor Contract Management',
+  description: 'A premium workspace for managing vendors, contracts, renewals, and spend.',
   generator: 'v0.app',
   icons: {
     icon: [
