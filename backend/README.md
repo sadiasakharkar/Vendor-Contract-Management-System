@@ -1,6 +1,6 @@
 # Vendor Contract Management API
 
-Spring Boot 3.2 / Java 17 API located alongside the existing frontend.
+Spring Boot 3.2 / Java 21 API located alongside the existing frontend.
 
 ## Run
 
@@ -10,4 +10,4 @@ Spring Boot 3.2 / Java 17 API located alongside the existing frontend.
 
 Flyway provisions the schema and baseline roles/users. Swagger is available at `/swagger-ui.html`; health is `/api/health`.
 
-Default accounts use `admin123`, `manager123`, and `viewer123` respectively.
+For local development, use the seeded administrator account: `admin@vms.com` / `Admin@123`.

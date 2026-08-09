@@ -1,2 +1,23 @@
-package com.vms.vendorcontractmanagement.controller; import com.vms.vendorcontractmanagement.dto.ContractDtos; import com.vms.vendorcontractmanagement.entity.*; import com.vms.vendorcontractmanagement.repository.*; import com.vms.vendorcontractmanagement.service.*; import lombok.*; import org.springframework.web.bind.annotation.*; import java.math.*; import java.time.*; import java.util.*; import java.util.stream.*;
-@RestController @RequestMapping("/api/dashboard") @RequiredArgsConstructor public class DashboardController {final VendorRepository vendors;final ContractRepository contracts;final DepartmentRepository departments;final ContractService contractService;@GetMapping("/summary") public Map<String,Object> summary(){List<Contract> all=contracts.findAll();return Map.of("totalVendors",vendors.count(),"activeVendors",vendors.findAll().stream().filter(v->"ACTIVE".equals(v.getStatus())).count(),"totalContracts",all.size(),"totalContractValue",all.stream().map(Contract::getContractValue).reduce(BigDecimal.ZERO,BigDecimal::add),"expiringIn30Days",contracts.expiring(LocalDate.now(),LocalDate.now().plusDays(30)).size(),"expiredContracts",all.stream().filter(c->c.getEndDate().isBefore(LocalDate.now())).count());}@GetMapping("/vendors-by-category") public List<Map<String,Object>> categories(){return vendors.findAll().stream().collect(Collectors.groupingBy(v->v.getCategory()==null?"Uncategorized":v.getCategory(),Collectors.counting())).entrySet().stream().<Map<String,Object>>map(e->Map.of("category",(Object)e.getKey(),"count",(Object)e.getValue())).toList();}@GetMapping("/contracts-by-status") public List<Map<String,Object>> statuses(){return contracts.findAll().stream().collect(Collectors.groupingBy(Contract::getStatus,Collectors.counting())).entrySet().stream().<Map<String,Object>>map(e->Map.of("status",(Object)e.getKey(),"count",(Object)e.getValue())).toList();}@GetMapping("/spending-by-department") public List<Map<String,Object>> spending(){return departments.findAll().stream().<Map<String,Object>>map(d->Map.of("departmentName",(Object)d.getDepartmentName(),"totalSpending",(Object)d.getVendors().stream().flatMap(v->contracts.findAll().stream().filter(c->c.getVendor().getId().equals(v.getId()))).map(Contract::getContractValue).reduce(BigDecimal.ZERO,BigDecimal::add))).toList();}@GetMapping("/expiring-contracts") public List<ContractDtos.Response> expiring(@RequestParam(defaultValue="30")int days){return contractService.expiring(days);} }
+package com.vms.vendorcontractmanagement.controller;
+
+import com.vms.vendorcontractmanagement.dto.ContractDtos;
+import com.vms.vendorcontractmanagement.service.ContractService;
+import com.vms.vendorcontractmanagement.service.DashboardService;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController @RequestMapping("/api/dashboard") @RequiredArgsConstructor
+public class DashboardController {
+  private final DashboardService dashboard; private final ContractService contracts;
+  @GetMapping("/summary") public Map<String,Object> summary() { return dashboard.summary(); }
+  @GetMapping("/vendors-by-category") public List<Map<String,Object>> categories() { return dashboard.categoryCounts(); }
+  @GetMapping("/contracts-by-status") public List<Map<String,Object>> statuses() { return dashboard.statusCounts(); }
+  @GetMapping("/spending-by-department") public List<Map<String,Object>> departmentSpending() { return dashboard.departmentSpending(); }
+  @GetMapping("/spending-by-vendor") public List<Map<String,Object>> vendorSpending() { return dashboard.vendorSpending(); }
+  @GetMapping("/expiring-contracts") public List<ContractDtos.Response> expiring(@RequestParam(defaultValue="30") int days) { return contracts.expiring(days); }
+}

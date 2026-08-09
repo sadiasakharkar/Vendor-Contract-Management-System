@@ -1,0 +1,3 @@
+#!/bin/sh
+# Maven launcher for POSIX environments. Uses Maven installed on PATH.
+exec mvn "$@"
